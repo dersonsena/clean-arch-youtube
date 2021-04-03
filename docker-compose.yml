@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  app:
+    container_name: clean-arch-youtube-app
+    image: dersonsena/php-nginx-dev
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - XDEBUG_START_WITH_REQUEST=yes
+      - XDEBUG_DISCOVER_CLIENT_HOST=false
+    ports:
+      - '8080:80'
+      - '443:443'
+    networks:
+      - clean-arch-youtube-network
+
+networks:
+  clean-arch-youtube-network:
+    driver: bridge
