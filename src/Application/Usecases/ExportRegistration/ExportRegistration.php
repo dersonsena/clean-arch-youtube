@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Usecases\ExportRegistration;
 
-use App\Application\Contracts\PdfTool;
 use App\Domain\Repositories\LoadRegistrationRepository;
 use App\Domain\ValueObjects\Cpf;
 use DateTime;
