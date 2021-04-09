@@ -1,13 +1,18 @@
 <?php
 
 use App\Application\Usecases\ExportRegistration\ExportRegistration;
-use App\Application\Usecases\ExportRegistration\InputBoundary;
 use App\Domain\Entities\Registration;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
 use App\Infra\Adapters\Html2PdfAdapter;
 use App\Infra\Adapters\LocalStorageAdapter;
+use App\Infra\Http\Controllers\ExportRegistrationController;
+use App\Infra\Presentation\ExportRegistrationPresenter;
 use App\Infra\Repositories\MySQL\PdoRegistrationRepository;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+
+ini_set('display_errors', 'off');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -45,5 +50,18 @@ $pdfExporter = new Html2PdfAdapter();
 $storage = new LocalStorageAdapter();
 
 $exportRegistrationUseCase = new ExportRegistration($loadRegistrationRepo, $pdfExporter, $storage);
-$inputBoundary = new InputBoundary('01234567890', 'xpto', __DIR__ . '/../storage');
-$output = $exportRegistrationUseCase->handle($inputBoundary);
+$request = new Request('GET', 'http://localhost:8080');
+$response = new Response();
+
+// Controllers
+
+$exportRegistrationController = new ExportRegistrationController(
+    $request,
+    $response,
+    $exportRegistrationUseCase
+);
+
+header("Content-type: application/json; charset=utf-8");
+
+$exportRegistrationPresenter = new ExportRegistrationPresenter();
+echo $exportRegistrationController->handle($exportRegistrationPresenter);

@@ -11,7 +11,9 @@
     "require": {
         "php": ">=7.4",
         "ext-pdo": "*",
-        "spipu/html2pdf": "^4.6"
+        "ext-json": "*",
+        "spipu/html2pdf": "^4.6",
+        "guzzlehttp/psr7": "^1.8"
     },
     "autoload": {
         "psr-4": {
