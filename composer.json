@@ -1,5 +1,6 @@
 {
     "name": "dersonsena/clean-arch-youtube",
+    "description": "",
     "type": "project",
     "authors": [
         {
@@ -9,7 +10,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "spipu/html2pdf": "^4.6"
     },
     "autoload": {
         "psr-4": {
