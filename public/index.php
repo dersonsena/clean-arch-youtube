@@ -8,6 +8,8 @@ use App\Domain\ValueObjects\Email;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Entities
+
 $registration = new Registration();
 
 $registration->setName('Kilderson Sena')
@@ -16,6 +18,14 @@ $registration->setName('Kilderson Sena')
     ->setRegistrationAt(new DateTimeImmutable())
     ->setRegistrationNumber(new Cpf('01234567890'));
 
-$exportRegistrationUseCase = new ExportRegistration();
-$inputBoundary = new InputBoundary('01234567890');
+
+
+// Use cases
+
+$loadRegistrationRepo = new stdClass();
+$pdfExporter = new stdClass();
+$storage = new stdClass();
+
+$exportRegistrationUseCase = new ExportRegistration($loadRegistrationRepo, $pdfExporter, $storage);
+$inputBoundary = new InputBoundary('01234567890', 'xpto', __DIR__ . '/../storage');
 $output = $exportRegistrationUseCase->handle($inputBoundary);
