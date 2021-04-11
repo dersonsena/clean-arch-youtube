@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Usecases\ExportRegistration;
 
 use App\Application\Contracts\ExportRegistrationPdfExporter;
+use App\Application\Contracts\OutputBoundary;
 use App\Application\Contracts\Storage;
 use App\Domain\Repositories\LoadRegistrationRepository;
 use App\Domain\ValueObjects\Cpf;
@@ -25,7 +26,7 @@ final class ExportRegistration
         $this->storage = $storage;
     }
 
-    public function handle(InputBoundary $input): OutputBoundary
+    public function handle(InputData $input): OutputBoundary
     {
         $cpf = new Cpf($input->getRegistrationNumber());
         $registration = $this->repository->loadByRegistrationNumber($cpf);
@@ -33,6 +34,8 @@ final class ExportRegistration
 
         $this->storage->store($input->getPdfFileName(), $input->getPath(), $fileContent);
 
-        return new OutputBoundary($input->getPath() . DIRECTORY_SEPARATOR . $input->getPdfFileName());
+        return new OutputData(
+            $input->getPath() . DIRECTORY_SEPARATOR . $input->getPdfFileName()
+        );
     }
 }

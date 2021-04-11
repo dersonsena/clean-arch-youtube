@@ -13,7 +13,7 @@ use App\Infra\Repositories\MySQL\PdoRegistrationRepository;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
-// ini_set('display_errors', 'off');
+ini_set('display_errors', 'off');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -65,6 +65,7 @@ $exportRegistrationController = new ExportRegistrationController(
 
 $exportRegistrationPresenter = new ExportRegistrationPresenter();
 
-echo $exportRegistrationController
-    ->handle($exportRegistrationPresenter)
-    ->getBody();
+$response = $exportRegistrationController->handle($exportRegistrationPresenter);
+
+header('Content-type: ' . $response->getHeaderLine('content-type'));
+echo $response->getBody();

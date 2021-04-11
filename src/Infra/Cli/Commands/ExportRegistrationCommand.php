@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infra\Cli\Commands;
 
 use App\Application\Usecases\ExportRegistration\ExportRegistration;
-use App\Application\Usecases\ExportRegistration\InputBoundary;
+use App\Application\Usecases\ExportRegistration\InputData;
 use App\Infra\Http\Controllers\Presentation;
 
 final class ExportRegistrationCommand
@@ -19,7 +19,7 @@ final class ExportRegistrationCommand
 
     public function handle(Presentation $presentation): string
     {
-        $inputBoundary = new InputBoundary(
+        $inputBoundary = new InputData(
             '01234567890',
             'xpto-cli.pdf',
             __DIR__ . '/../../../../storage/registrations'

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Usecases\ExportRegistration;
 
-final class InputBoundary
+final class InputData
 {
     private string $registrationNumber;
     private string $pdfFileName;
