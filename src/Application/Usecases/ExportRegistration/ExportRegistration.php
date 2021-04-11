@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Usecases\ExportRegistration;
 
 use App\Application\Contracts\ExportRegistrationPdfExporter;
-use App\Application\Contracts\UseCaseBoundary;
+use App\Shared\Application\Contracts\UseCaseBoundary;
 use App\Application\Contracts\Storage;
 use App\Domain\Repositories\LoadRegistrationRepository;
 use App\Domain\ValueObjects\Cpf;

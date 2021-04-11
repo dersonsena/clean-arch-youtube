@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Helpers;
+namespace App\Shared\Application;
 
-use App\Application\Contracts\UseCaseBoundary;
+use App\Shared\Application\Contracts\UseCaseBoundary;
 use InvalidArgumentException;
-use OutOfBoundsException;
 
 abstract class Boundary implements UseCaseBoundary
 {

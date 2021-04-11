@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Contracts;
+namespace App\Shared\Application\Contracts;
 
 interface UseCaseBoundary
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Usecases\ExportRegistration;
 
-use App\Application\Helpers\Boundary;
+use App\Shared\Application\Boundary;
 
 /**
  * Class OutputData
