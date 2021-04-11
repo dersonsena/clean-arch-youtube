@@ -8,7 +8,7 @@ use DomainException;
 
 final class Email
 {
-    private string $email = 'a@email.com.br';
+    private string $email;
 
     public function __construct(string $email)
     {
