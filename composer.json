@@ -12,6 +12,7 @@
         "php": ">=7.4",
         "ext-pdo": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "spipu/html2pdf": "^4.6",
         "guzzlehttp/psr7": "^1.8",
         "dompdf/dompdf": "^1.0"

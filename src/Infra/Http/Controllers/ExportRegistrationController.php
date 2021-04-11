@@ -27,11 +27,11 @@ final class ExportRegistrationController
 
     public function handle(Presentation $presentation): Response
     {
-        $inputBoundary = new InputData(
-            '01234567890',
-            'xpto-dompdf.pdf',
-            __DIR__ . '/../../../../storage/registrations'
-        );
+        $inputBoundary = InputData::create([
+            'registrationNumber' => '01234567890',
+            'pdfFileName' => 'xpto-dompdf.pdf',
+            'path' => __DIR__ . '/../../../../storage/registrations'
+        ]);
 
         $output = $this->useCase->handle($inputBoundary);
 

@@ -4,31 +4,24 @@ declare(strict_types=1);
 
 namespace App\Application\Usecases\ExportRegistration;
 
-final class InputData
+use App\Application\Helpers\Boundary;
+
+/**
+ * Class InputData
+ * @package App\Application\Usecases\ExportRegistration
+ *
+ * @property string $registrationNumber;
+ * @property string $pdfFileName;
+ * @property string $path;
+ */
+final class InputData extends Boundary
 {
-    private string $registrationNumber;
-    private string $pdfFileName;
-    private string $path;
+    protected string $registrationNumber;
+    protected string $pdfFileName;
+    protected string $path;
 
-    public function __construct(string $registrationNumber, string $pdfFileName, string $path)
+    public function getFullFileName(): string
     {
-        $this->registrationNumber = $registrationNumber;
-        $this->pdfFileName = $pdfFileName;
-        $this->path = $path;
-    }
-
-    public function getRegistrationNumber(): string
-    {
-        return $this->registrationNumber;
-    }
-
-    public function getPdfFileName(): string
-    {
-        return $this->pdfFileName;
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
+        return $this->path . DIRECTORY_SEPARATOR . $this->pdfFileName;
     }
 }

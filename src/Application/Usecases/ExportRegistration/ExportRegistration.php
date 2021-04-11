@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Usecases\ExportRegistration;
 
 use App\Application\Contracts\ExportRegistrationPdfExporter;
-use App\Application\Contracts\OutputBoundary;
+use App\Application\Contracts\UseCaseBoundary;
 use App\Application\Contracts\Storage;
 use App\Domain\Repositories\LoadRegistrationRepository;
 use App\Domain\ValueObjects\Cpf;
@@ -26,16 +26,14 @@ final class ExportRegistration
         $this->storage = $storage;
     }
 
-    public function handle(InputData $input): OutputBoundary
+    public function handle(InputData $input): UseCaseBoundary
     {
-        $cpf = new Cpf($input->getRegistrationNumber());
+        $cpf = new Cpf($input->registrationNumber);
         $registration = $this->repository->loadByRegistrationNumber($cpf);
         $fileContent = $this->pdfExporter->generate($registration);
 
-        $this->storage->store($input->getPdfFileName(), $input->getPath(), $fileContent);
+        $this->storage->store($input->pdfFileName, $input->path, $fileContent);
 
-        return new OutputData(
-            $input->getPath() . DIRECTORY_SEPARATOR . $input->getPdfFileName()
-        );
+        return OutputData::create(['fullFileName' => $input->getFullFileName()]);
     }
 }
