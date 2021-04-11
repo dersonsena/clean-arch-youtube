@@ -34,13 +34,14 @@ final class PdoRegistrationRepository implements LoadRegistrationRepository
             throw new RegistrationNotFoundException($cpf);
         }
 
-        $registration = new Registration();
-        $registration->setName($record['name'])
-            ->setBirthDate(new DateTimeImmutable($record['birth_date']))
-            ->setEmail(new Email($record['email']))
-            ->setRegistrationAt(new DateTimeImmutable($record['created_at']))
-            ->setRegistrationNumber(new Cpf($record['registration_number']));
+        $values = [
+            'name' => $record['name'],
+            'birth_date' => new DateTimeImmutable($record['birth_date']),
+            'email' => new Email($record['email']),
+            'registration_at' => new DateTimeImmutable($record['created_at']),
+            'registration_number' => new Cpf($record['registration_number'])
+        ];
 
-        return $registration;
+        return Registration::create($values);
     }
 }

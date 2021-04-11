@@ -13,23 +13,20 @@ use App\Infra\Repositories\MySQL\PdoRegistrationRepository;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
-ini_set('display_errors', 'off');
+//ini_set('display_errors', 'off');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $appConfig = require_once __DIR__ . '/../config/app.php';
 
 // Entities
-
-$registration = new Registration();
-
-$registration->setName('Kilderson Sena')
-    ->setBirthDate(new DateTimeImmutable('1988-02-14'))
-    ->setEmail(new Email('dersonsena@gmail.com'))
-    ->setRegistrationAt(new DateTimeImmutable())
-    ->setRegistrationNumber(new Cpf('01234567890'));
-
-
+$registration = Registration::create([
+    'name' => 'Kilderson Sena',
+    'birth_date' => new DateTimeImmutable('1988-02-14'),
+    'email' => new Email('dersonsena@gmail.com'),
+    'registrationAt' => new DateTimeImmutable(),
+    'registration_number' => new Cpf('01234567890')
+]);
 
 // Use cases
 $dsn = sprintf(

@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Helpers;
+namespace App\Shared\Domain;
 
-use App\Application\Contracts\UseCaseBoundary;
 use InvalidArgumentException;
-use OutOfBoundsException;
 
-abstract class Boundary implements UseCaseBoundary
+abstract class Entity
 {
     private function __construct(array $values)
     {
@@ -18,7 +16,7 @@ abstract class Boundary implements UseCaseBoundary
             }
 
             if (!property_exists($this, $key)) {
-                throw new InvalidArgumentException("Property '{$key}' doesn't exists in Boundary Class '" . get_class() . "'");
+                throw new InvalidArgumentException("Property '{$key}' doesn't exists in Entity Class '" . get_class() . "'");
             }
 
             $this->{$key} = $value;
@@ -34,14 +32,27 @@ abstract class Boundary implements UseCaseBoundary
         return new static($values);
     }
 
-    public function values(): array
+    /**
+     * @param array $values
+     */
+    public function fill(array $values): void
     {
-        return get_object_vars($this);
-    }
+        foreach ($values as $key => $value) {
+            if ($value === null) {
+                unset($values[$key]);
+            }
+        }
 
-    public function get(string $key)
-    {
-        return $this->{$key};
+        foreach ($values as $attribute => $value) {
+            $setter = 'set' . str_replace('_', '', ucwords($attribute, '_'));
+
+            if (method_exists($this, $setter)) {
+                $this->$setter($value);
+                continue;
+            }
+
+            $this->{$attribute} = $values;
+        }
     }
 
     public function __get(string $name)
@@ -57,7 +68,7 @@ abstract class Boundary implements UseCaseBoundary
         }
 
         if (!property_exists($this, $name)) {
-            throw new InvalidArgumentException("Property '{$name}' doesn't exists in Boundary Class '" . get_class() . "'");
+            throw new InvalidArgumentException("Property '{$name}' doesn't exists in Entity Class '" . get_class() . "'");
         }
 
         return $this->{$name};
