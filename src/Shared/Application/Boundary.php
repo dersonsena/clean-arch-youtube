@@ -7,8 +7,18 @@ namespace App\Shared\Application;
 use App\Shared\Application\Contracts\UseCaseBoundary;
 use InvalidArgumentException;
 
+/**
+ * Class Boundary
+ * @package App\Shared\Application
+ * @author Kilderson Sena <dersonsena@gmail.com>
+ */
 abstract class Boundary implements UseCaseBoundary
 {
+    /**
+     * Boundary constructor.
+     * @param array $values
+     * @throws InvalidArgumentException if any property doesn't exists
+     */
     private function __construct(array $values)
     {
         foreach ($values as $key => $value) {
@@ -25,24 +35,37 @@ abstract class Boundary implements UseCaseBoundary
     }
 
     /**
-     * @param array $values
-     * @return static
+     * Static method to create a Boundary (Input or Output)
+     * @param array $values Associative array such as `'property' => 'value'`
+     * @return UseCaseBoundary
      */
-    public static function create(array $values): self
+    public static function create(array $values): UseCaseBoundary
     {
         return new static($values);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function values(): array
     {
         return get_object_vars($this);
     }
 
-    public function get(string $key)
+    /**
+     * {@inheritdoc}
+     */
+    public function get(string $property)
     {
-        return $this->{$key};
+        return $this->__get($property);
     }
 
+    /**
+     * Magic getter method to get a Boudary property value
+     * @param string $name
+     * @return mixed
+     * @throws InvalidArgumentException if any property doesn't exists
+     */
     public function __get(string $name)
     {
         $getter = "get" . ucfirst($name);

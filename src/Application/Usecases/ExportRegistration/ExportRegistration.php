@@ -26,13 +26,13 @@ final class ExportRegistration
         $this->storage = $storage;
     }
 
-    public function handle(InputData $input): UseCaseBoundary
+    public function handle(UseCaseBoundary $input): UseCaseBoundary
     {
-        $cpf = new Cpf($input->registrationNumber);
+        $cpf = new Cpf($input->get('registrationNumber'));
         $registration = $this->repository->loadByRegistrationNumber($cpf);
         $fileContent = $this->pdfExporter->generate($registration);
 
-        $this->storage->store($input->pdfFileName, $input->path, $fileContent);
+        $this->storage->store($input->get('pdfFileName'), $input->get('path'), $fileContent);
 
         return OutputData::create(['fullFileName' => $input->getFullFileName()]);
     }

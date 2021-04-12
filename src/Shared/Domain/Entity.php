@@ -6,13 +6,30 @@ namespace App\Shared\Domain;
 
 use InvalidArgumentException;
 
+/**
+ * Class Entity
+ * @package App\Shared\Domain
+ * @author Kilderson Sena <dersonsena@gmail.com>
+ */
 abstract class Entity
 {
+    /**
+     * Entity constructor.
+     * @param array $values
+     * @throws InvalidArgumentException if any property doesn't exists
+     */
     private function __construct(array $values)
     {
         foreach ($values as $key => $value) {
             if (mb_strstr($key, '_') !== false) {
                 $key = lcfirst(str_replace('_', '', ucwords($key, '_')));
+            }
+
+            $setter = 'set' . str_replace('_', '', ucwords($key, '_'));
+
+            if (method_exists($this, $setter)) {
+                $this->{$setter}($value);
+                continue;
             }
 
             if (!property_exists($this, $key)) {
@@ -24,8 +41,9 @@ abstract class Entity
     }
 
     /**
+     * Static method to create an Entity
      * @param array $values
-     * @return static
+     * @return Entity
      */
     public static function create(array $values): self
     {
@@ -33,7 +51,9 @@ abstract class Entity
     }
 
     /**
-     * @param array $values
+     * Method for populate an Entity through array
+     * @param array $values Associative array such as `'property' => 'value'`
+     * @return void
      */
     public function fill(array $values): void
     {
@@ -55,6 +75,12 @@ abstract class Entity
         }
     }
 
+    /**
+     * Magic getter method to get an Entity property value
+     * @param string $name
+     * @return mixed
+     * @throws InvalidArgumentException if any property doesn't exists
+     */
     public function __get(string $name)
     {
         $getter = "get" . ucfirst($name);
