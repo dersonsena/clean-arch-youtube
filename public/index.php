@@ -1,6 +1,7 @@
 <?php
 
 use App\Application\Usecases\ExportRegistration\ExportRegistration;
+use App\Application\Usecases\ExportRegistration\InputData;
 use App\Domain\Entities\Registration;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
@@ -10,6 +11,8 @@ use App\Infra\Adapters\LocalStorageAdapter;
 use App\Infra\Http\Controllers\ExportRegistrationController;
 use App\Infra\Presentation\ExportRegistrationPresenter;
 use App\Infra\Repositories\MySQL\PdoRegistrationRepository;
+use App\Infra\Validation\ExportRegistrationValidation;
+use App\Shared\Infra\Validation\Validator;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
