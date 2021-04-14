@@ -61,4 +61,9 @@ final class ValidationBuilder
     {
         return $this->validators;
     }
+
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
 }
