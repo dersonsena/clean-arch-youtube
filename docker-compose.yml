@@ -8,6 +8,7 @@ services:
     environment:
       - XDEBUG_START_WITH_REQUEST=yes
       - XDEBUG_DISCOVER_CLIENT_HOST=false
+      - XDEBUG_MODE=coverage
     ports:
       - '8080:80'
       - '443:443'
