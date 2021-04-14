@@ -10,23 +10,20 @@ use App\Shared\Infra\Validation\Exceptions\ValidationFieldException;
 final class MinLength implements FieldValidator
 {
     private string $fieldName;
-    private int $minLength;
+    private int $length;
 
-    public function __construct(string $fieldName, int $minLength)
+    public function __construct(string $fieldName, int $length)
     {
         $this->fieldName = $fieldName;
-        $this->minLength = $minLength;
+        $this->length = $length;
     }
 
     public function validate($value): void
     {
-        if (strlen($value) < $this->minLength) {
-            throw new ValidationFieldException($this->fieldName, "min-length:{$this->minLength}");
-        }
-    }
+        $value = (string)$value;
 
-    public function getFieldName(): string
-    {
-        return $this->fieldName;
+        if (strlen($value) < $this->length) {
+            throw new ValidationFieldException($this->fieldName, "min-length:{$this->length}");
+        }
     }
 }

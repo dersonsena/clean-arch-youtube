@@ -12,6 +12,10 @@ final class Cpf
 
     public function __construct(string $cpf)
     {
+        if (empty($cpf)) {
+            throw new DomainException('The CPF cannot be empty.');
+        }
+
         if (!$this->validate($cpf)) {
             throw new DomainException('CPF is not valid');
         }

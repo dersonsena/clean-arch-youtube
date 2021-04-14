@@ -10,23 +10,20 @@ use App\Shared\Infra\Validation\Exceptions\ValidationFieldException;
 final class MaxLength implements FieldValidator
 {
     private string $fieldName;
-    private int $maxLength;
+    private int $length;
 
-    public function __construct(string $fieldName, int $maxLength)
+    public function __construct(string $fieldName, int $length)
     {
         $this->fieldName = $fieldName;
-        $this->maxLength = $maxLength;
+        $this->length = $length;
     }
 
     public function validate($value): void
     {
-        if (strlen($value) > $this->maxLength) {
-            throw new ValidationFieldException($this->fieldName, "max-length:{$this->maxLength}");
-        }
-    }
+        $value = (string)$value;
 
-    public function getFieldName(): string
-    {
-        return $this->fieldName;
+        if (strlen($value) > $this->length) {
+            throw new ValidationFieldException($this->fieldName, "max-length:{$this->length}");
+        }
     }
 }

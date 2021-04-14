@@ -12,6 +12,10 @@ final class Email
 
     public function __construct(string $email)
     {
+        if (empty($email)) {
+            throw new DomainException('The Email cannot be empty.');
+        }
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new DomainException('Email is not valid');
         }

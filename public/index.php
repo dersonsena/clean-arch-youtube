@@ -10,6 +10,8 @@ use App\Infra\Adapters\LocalStorageAdapter;
 use App\Infra\Http\Controllers\ExportRegistrationController;
 use App\Infra\Presentation\ExportRegistrationPresenter;
 use App\Infra\Repositories\MySQL\PdoRegistrationRepository;
+use App\Shared\Application\ValidationCreator;
+use App\Shared\Infra\Validation\Validator;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -21,7 +23,7 @@ $appConfig = require_once __DIR__ . '/../config/app.php';
 
 // Entities
 $registration = Registration::create([
-    'name' => 'Kilderson Sena',
+    'name' => '',
     'birth_date' => new DateTimeImmutable('1988-02-14'),
     'email' => new Email('dersonsena@gmail.com'),
     'registrationAt' => new DateTimeImmutable(),
@@ -44,6 +46,14 @@ $pdo = new PDO($dsn, $appConfig['db']['username'], $appConfig['db']['password'],
 ]);
 
 $loadRegistrationRepo = new PdoRegistrationRepository($pdo);
+$loadRegistrationRepo->create($registration);
+die;
+
+
+
+
+
+
 //$pdfExporter = new Html2PdfAdapter();
 $pdfExporter = new DomPdfAdapter();
 $storage = new LocalStorageAdapter();

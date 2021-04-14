@@ -9,6 +9,7 @@ use App\Domain\Exceptions\RegistrationNotFoundException;
 use App\Domain\Repositories\LoadRegistrationRepository;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
+use App\Shared\Infra\Validation\Validator;
 use DateTimeImmutable;
 use PDO;
 
@@ -19,6 +20,15 @@ final class PdoRegistrationRepository implements LoadRegistrationRepository
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+    public function create(Registration $registration)
+    {
+        $validationsRules = $registration->validationRules();
+
+        echo '<pre>';
+        print_r(Validator::validate(new \stdClass(), $validationsRules));
+        die;
     }
 
     public function loadByRegistrationNumber(Cpf $cpf): Registration

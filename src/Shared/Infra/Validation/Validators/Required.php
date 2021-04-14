@@ -18,13 +18,10 @@ final class Required implements FieldValidator
 
     public function validate($value): void
     {
+        $value = (string)$value;
+
         if (is_null($value) || empty($value)) {
             throw new ValidationFieldException($this->fieldName, 'required');
         }
-    }
-
-    public function getFieldName(): string
-    {
-        return $this->fieldName;
     }
 }

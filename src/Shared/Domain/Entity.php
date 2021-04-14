@@ -76,6 +76,22 @@ abstract class Entity
     }
 
     /**
+     * Method used to create the entity validation. An example to create a validation:
+     *
+     * ```php
+     * return [
+     *     ...
+     * ]
+     * ```
+     *
+     * @return array List of validations settings to be used in validation process
+     */
+    public function validationRules(): array
+    {
+        return [];
+    }
+
+    /**
      * Magic getter method to get an Entity property value
      * @param string $name
      * @return mixed

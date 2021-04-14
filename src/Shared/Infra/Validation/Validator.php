@@ -4,39 +4,62 @@ declare(strict_types=1);
 
 namespace App\Shared\Infra\Validation;
 
+use App\Shared\Domain\Validation\ValidationSetting;
 use App\Shared\Infra\Validation\Contracts\FieldValidator;
+use App\Shared\Infra\Validation\Exceptions\ValidationException;
 use App\Shared\Infra\Validation\Exceptions\ValidationFieldException;
-use RuntimeException;
+use App\Shared\Infra\Validation\Validators\MaxLength;
+use App\Shared\Infra\Validation\Validators\MinLength;
+use App\Shared\Infra\Validation\Validators\Required;
 
-final class Validator
+abstract class Validator
 {
-    private array $errors = [];
+    private static array $validatorMap = [
+        'required' => Required::class,
+        'min-length' => MinLength::class,
+        'max-length' => MaxLength::class
+    ];
 
-    /**
-     * @param FieldValidator[] $validators
-     * @param array $values
-     * @return array
-     */
-    public function validate(array $validators, array $values): array
+    public static function validate($data, $validations): array
     {
-        foreach ($values as $fieldName => $value) {
-            foreach ($validators as $validator) {
+        $errors = [];
+
+        /** @var ValidationSetting $validationSetting */
+        foreach ($validations as $validationSetting) {
+            $output[$validationSetting->getFieldName()] = [];
+            $value = static::extractValue($validationSetting->getFieldName(), $data);
+
+            try {
+                $validator = new self::$validatorMap[$validationSetting->getRule()](
+                    $validationSetting->getFieldName(),
+                    ...$validationSetting->getOptions()
+                );
+
                 if (!$validator instanceof FieldValidator) {
-                    throw new RuntimeException('All validations must be instance of ' . FieldValidator::class);
+                    throw new ValidationException("Class '". get_class($validator) ."' must be type of " . FieldValidator::class);
                 }
 
-                if ($validator->getFieldName() !== $fieldName) {
-                    continue;
-                }
-
-                try {
-                    $validator->validate($value);
-                } catch (ValidationFieldException $e) {
-                    $this->errors[$e->getFieldName()][] = $e->getKey();
-                }
+                $validator->validate($value);
+            } catch (ValidationFieldException $e) {
+                $errors[$e->getFieldName()][] = $e->getKey();
+            } catch (ValidationException $e) {
+                throw $e;
             }
         }
 
-        return $this->errors;
+        return $errors;
+    }
+
+    private static function extractValue(string $fieldName, $data)
+    {
+        if (is_object($data) && isset($data->{$fieldName})) {
+            return $data->{$fieldName};
+        }
+
+        if (is_array($data) && isset($data[$fieldName])) {
+            return $data[$fieldName];
+        }
+
+        return null;
     }
 }
