@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Infra\Validation;
 
+use App\Shared\Domain\Validation\ValidationBuilder;
 use App\Shared\Domain\Validation\ValidationSetting;
 use App\Shared\Infra\Validation\Contracts\FieldValidator;
 use App\Shared\Infra\Validation\Exceptions\ValidationException;
@@ -15,9 +16,9 @@ use App\Shared\Infra\Validation\Validators\Required;
 abstract class Validator
 {
     private static array $validatorMap = [
-        'required' => Required::class,
-        'min-length' => MinLength::class,
-        'max-length' => MaxLength::class
+        ValidationBuilder::REQUIRED => Required::class,
+        ValidationBuilder::MIN_LENGTH => MinLength::class,
+        ValidationBuilder::MAX_LENGTH => MaxLength::class
     ];
 
     public static function validate($data, $validations): array
