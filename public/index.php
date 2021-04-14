@@ -10,8 +10,6 @@ use App\Infra\Adapters\LocalStorageAdapter;
 use App\Infra\Http\Controllers\ExportRegistrationController;
 use App\Infra\Presentation\ExportRegistrationPresenter;
 use App\Infra\Repositories\MySQL\PdoRegistrationRepository;
-use App\Shared\Application\ValidationCreator;
-use App\Shared\Infra\Validation\Validator;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
