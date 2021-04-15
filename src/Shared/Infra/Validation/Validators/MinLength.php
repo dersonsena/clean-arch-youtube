@@ -26,4 +26,9 @@ final class MinLength implements FieldValidator
             throw new ValidationFieldException($this->fieldName, "min-length:{$this->length}");
         }
     }
+
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
 }

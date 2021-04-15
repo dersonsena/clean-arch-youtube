@@ -35,4 +35,9 @@ final class Required implements FieldValidator
             throw new ValidationFieldException($this->fieldName, 'required');
         }
     }
+
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
 }

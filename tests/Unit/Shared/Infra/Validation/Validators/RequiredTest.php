@@ -11,48 +11,49 @@ use Tests\Unit\Shared\Infra\Validation\Fakes\ClassWithToStringMethod;
 
 class RequiredTest extends AppTestCase
 {
-    public function testIfExceptionIsThrowIfValueIsEmpty()
+    private static function makeSut(): Required
     {
         $fieldName = self::$faker->slug(1);
+        return new Required($fieldName);
+    }
+
+    public function testIfExceptionIsThrowIfValueIsEmpty()
+    {
+        $sut = self::makeSut();
 
         $this->expectException(ValidationFieldException::class);
-        $this->expectExceptionMessage($fieldName);
+        $this->expectExceptionMessage($sut->getFieldName());
 
-        $sut = new Required($fieldName);
         $sut->validate('');
     }
 
     public function testIfExceptionIsThrowIfValueIsNull()
     {
-        $fieldName = self::$faker->slug(1);
+        $sut = self::makeSut();
 
         $this->expectException(ValidationFieldException::class);
-        $this->expectExceptionMessage($fieldName);
+        $this->expectExceptionMessage($sut->getFieldName());
 
-        $sut = new Required($fieldName);
         $sut->validate(null);
     }
 
     public function testIfExceptionIsThrowIfValueIsEmptyArray()
     {
-        $fieldName = self::$faker->slug(1);
+        $sut = self::makeSut();
 
         $this->expectException(ValidationFieldException::class);
-        $this->expectExceptionMessage($fieldName);
+        $this->expectExceptionMessage($sut->getFieldName());
 
-        $sut = new Required($fieldName);
         $sut->validate([]);
     }
 
     public function testIfExceptionIsThrowIfValueIsObjectWithoutToStringImplementation()
     {
-        $fieldName = self::$faker->slug(1);
-
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('To validate an object it must have the "__toString" method implemented.');
 
-        $sut = new Required($fieldName);
-        $sut->validate(new StdClass());
+        $sut = self::makeSut();
+        $sut->validate(new stdClass());
     }
 
     /**
@@ -62,11 +63,9 @@ class RequiredTest extends AppTestCase
      */
     public function testIfValidateRequiredCorrectly()
     {
-        $fieldName = self::$faker->slug(1);
+        $sut = self::makeSut();
         $key = self::$faker->slug(1);
         $value = self::$faker->slug(1);
-
-        $sut = new Required($fieldName);
 
         $sut->validate(self::$faker->boolean());
         $sut->validate(new ClassWithToStringMethod());
