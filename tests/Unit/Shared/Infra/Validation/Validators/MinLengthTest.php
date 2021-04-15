@@ -43,7 +43,7 @@ class MinLengthTest extends AppTestCase
         self::makeSut()->validate(self::$faker->boolean());
     }
 
-    public function testIfExecptionIsThrownWhenMinLengthIsNotEnough()
+    public function testIfExceptionIsThrownWhenMinLengthIsNotEnough()
     {
         $sut = self::makeSut();
 
@@ -51,6 +51,18 @@ class MinLengthTest extends AppTestCase
         $this->expectExceptionMessage("Validation field error: {$sut->getFieldName()} | " . ValidationBuilder::MIN_LENGTH);
 
         $sut->validate(self::$faker->text(5));
+    }
+
+    public function testIfExceptionIsThrownWhenArrayIsNotHaveElementsEnough()
+    {
+        $sut = self::makeSut();
+
+        $this->expectException(ValidationFieldException::class);
+        $this->expectExceptionMessage("Validation field error: {$sut->getFieldName()} | " . ValidationBuilder::MIN_LENGTH);
+
+        $sut->validate([
+            self::$faker->slug(1)
+        ]);
     }
 
     /**

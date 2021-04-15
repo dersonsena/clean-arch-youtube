@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Shared\Infra\Validation\Validators;
 
+use App\Shared\Domain\Validation\ValidationBuilder;
 use stdClass;
 use App\Shared\Infra\Validation\Exceptions\ValidationException;
 use App\Shared\Infra\Validation\Exceptions\ValidationFieldException;
@@ -17,37 +18,37 @@ class RequiredTest extends AppTestCase
         return new Required($fieldName);
     }
 
-    public function testIfExceptionIsThrowIfValueIsEmpty()
+    public function testIfExceptionIsThrownIfValueIsEmpty()
     {
         $sut = self::makeSut();
 
         $this->expectException(ValidationFieldException::class);
-        $this->expectExceptionMessage($sut->getFieldName());
+        $this->expectExceptionMessage("Validation field error: {$sut->getFieldName()} | " . ValidationBuilder::REQUIRED);
 
         $sut->validate('');
     }
 
-    public function testIfExceptionIsThrowIfValueIsNull()
+    public function testIfExceptionIsThrownIfValueIsNull()
     {
         $sut = self::makeSut();
 
         $this->expectException(ValidationFieldException::class);
-        $this->expectExceptionMessage($sut->getFieldName());
+        $this->expectExceptionMessage("Validation field error: {$sut->getFieldName()} | " . ValidationBuilder::REQUIRED);
 
         $sut->validate(null);
     }
 
-    public function testIfExceptionIsThrowIfValueIsEmptyArray()
+    public function testIfExceptionIsThrownIfValueIsEmptyArray()
     {
         $sut = self::makeSut();
 
         $this->expectException(ValidationFieldException::class);
-        $this->expectExceptionMessage($sut->getFieldName());
+        $this->expectExceptionMessage("Validation field error: {$sut->getFieldName()} | " . ValidationBuilder::REQUIRED);
 
         $sut->validate([]);
     }
 
-    public function testIfExceptionIsThrowIfValueIsObjectWithoutToStringImplementation()
+    public function testIfExceptionIsThrownIfValueIsObjectWithoutToStringImplementation()
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('To validate an object it must have the "__toString" method implemented.');
