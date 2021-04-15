@@ -10,6 +10,6 @@ class ClassWithToStringMethod
 {
     public function __toString(): string
     {
-        return Factory::create()->words(3, true);
+        return Factory::create()->text(10);
     }
 }
