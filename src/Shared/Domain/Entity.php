@@ -21,22 +21,7 @@ abstract class Entity
     private function __construct(array $values)
     {
         foreach ($values as $key => $value) {
-            if (mb_strstr($key, '_') !== false) {
-                $key = lcfirst(str_replace('_', '', ucwords($key, '_')));
-            }
-
-            $setter = 'set' . str_replace('_', '', ucwords($key, '_'));
-
-            if (method_exists($this, $setter)) {
-                $this->{$setter}($value);
-                continue;
-            }
-
-            if (!property_exists($this, $key)) {
-                throw new InvalidArgumentException("Property '{$key}' doesn't exists in Entity Class '" . get_class() . "'");
-            }
-
-            $this->{$key} = $value;
+            $this->setPropertyValue($key, $value);
         }
     }
 
@@ -57,22 +42,35 @@ abstract class Entity
      */
     public function fill(array $values): void
     {
-        foreach ($values as $key => $value) {
-            if ($value === null) {
-                unset($values[$key]);
-            }
-        }
-
         foreach ($values as $attribute => $value) {
-            $setter = 'set' . str_replace('_', '', ucwords($attribute, '_'));
-
-            if (method_exists($this, $setter)) {
-                $this->$setter($value);
-                continue;
-            }
-
-            $this->{$attribute} = $values;
+            $this->setPropertyValue($attribute, $value);
         }
+    }
+
+    /**
+     * Method that contains the property setter logic
+     * @param string $property Object property name
+     * @param mixed $value Value to be inserted in property
+     * @return void
+     */
+    private function setPropertyValue(string $property, $value): void
+    {
+        if (mb_strstr($property, '_') !== false) {
+            $property = lcfirst(str_replace('_', '', ucwords($property, '_')));
+        }
+
+        $setter = 'set' . str_replace('_', '', ucwords($property, '_'));
+
+        if (method_exists($this, $setter)) {
+            $this->{$setter}($value);
+            return;
+        }
+
+        if (!property_exists($this, $property)) {
+            throw new InvalidArgumentException("Property '{$property}' doesn't exists in Entity Class '" . get_class() . "'");
+        }
+
+        $this->{$property} = $value;
     }
 
     /**
@@ -80,7 +78,9 @@ abstract class Entity
      *
      * ```php
      * return [
-     *     ...
+     *     ...ValidationBuilder::field('property_name1')->required()->maxLength(25)->build(),
+     *     ...ValidationBuilder::field('property_name2')->minLength(25)->build()
+     *     ...ValidationBuilder::field('property_name3')->email()->build()
      * ]
      * ```
      *
@@ -100,10 +100,6 @@ abstract class Entity
     public function __get(string $name)
     {
         $getter = "get" . ucfirst($name);
-
-        if (mb_strstr($name, '_') !== false) {
-            $getter = "get" . str_replace('_', '', ucwords($name, '_'));
-        }
 
         if (method_exists($this, $getter)) {
             return $this->{$getter}();
