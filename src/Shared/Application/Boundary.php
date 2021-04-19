@@ -14,6 +14,8 @@ use InvalidArgumentException;
  */
 abstract class Boundary implements UseCaseBoundary
 {
+    private array $boundaryValues = [];
+
     /**
      * Boundary constructor.
      * @param array $values
@@ -31,6 +33,7 @@ abstract class Boundary implements UseCaseBoundary
             }
 
             $this->{$key} = $value;
+            $this->boundaryValues[$key] = $this->get($key);
         }
     }
 
@@ -49,7 +52,7 @@ abstract class Boundary implements UseCaseBoundary
      */
     public function values(): array
     {
-        return get_object_vars($this);
+        return $this->boundaryValues;
     }
 
     /**
@@ -61,7 +64,7 @@ abstract class Boundary implements UseCaseBoundary
     }
 
     /**
-     * Magic getter method to get a Boudary property value
+     * Magic getter method to get a Boundary property value
      * @param string $name
      * @return mixed
      * @throws InvalidArgumentException if any property doesn't exists
@@ -69,10 +72,6 @@ abstract class Boundary implements UseCaseBoundary
     public function __get(string $name)
     {
         $getter = "get" . ucfirst($name);
-
-        if (mb_strstr($name, '_') !== false) {
-            $getter = "get" . str_replace('_', '', ucwords($name, '_'));
-        }
 
         if (method_exists($this, $getter)) {
             return $this->{$getter}();
